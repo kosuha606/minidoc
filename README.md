@@ -45,5 +45,5 @@ $docsBuilder->addParseParam('mark');
 ```
 Настроить предзагрузку классов путем передачи пути к директории с классами:
 ```php
-$docsBuilder->setPreloadDirClasses(__DIR__.'/../../../../contexts');
+$docsBuilder->addPreloadClassesDir(__DIR__.'/../../../../contexts');
 ```
