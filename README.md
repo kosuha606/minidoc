@@ -14,10 +14,14 @@ $ composer require --dev kosuha606/minidoc
 Пример вывода документации:
 ```php
 <?php
-$docsBuilder = new DocsBuilder('/contexts/');
-$docsBuilder->setParseParams(['category', 'description']);
-$docsBuilder->setPreloadDirClasses(__DIR__.'/../../../../contexts');
-return $docsBuilder->buildTemplate();
+echo (new DocsBuilder())
+    ->addParseParam('category')
+    ->addParseParam('description')
+    ->addParseParam('version')
+    ->addClassRegexp('/classes/')
+    ->addPreloadClassesDir(__DIR__.'/classes')
+    ->buildTemplate()
+;
 ```
 
 ### Пример работы
