@@ -1,6 +1,13 @@
 Minidoc
 ---
 
+### Установка
+```bash
+$ composer require --dev kosuha606/minidoc
+```
+
+### Quick Start
+
 Инструмент для быстрого сбора документации из аннтоаций
 классов в проекте.
 
@@ -11,4 +18,28 @@ $docsBuilder = new DocsBuilder('/contexts/');
 $docsBuilder->setParseParams(['category', 'description']);
 $docsBuilder->setPreloadDirClasses(__DIR__.'/../../../../contexts');
 return $docsBuilder->buildTemplate();
+```
+
+### Пример работы
+
+![alt text](http://kosuha606.ru/uploads/example.png)
+
+### Настройка
+Добавить стили или скритпы в шаблон:
+```php
+$docsBuilder->addStyle(new ResourceDTO(__DIR__.'/resources/style.css', ResourceDTO::TYPE_FILE));
+$docsBuilder->addScript(new ResourceDTO(__DIR__.'/resources/script.js', ResourceDTO::TYPE_FILE));
+```
+Отрендерить свой шаблон документации:
+```php
+$docsBuilder->setViewTemplate(__DIR__.'/views/main.php');
+```
+Добавтиь свои параметры для парсинга в аннотациях:
+```php
+$docsBuilder->setParseParams(['category', 'description']);
+$docsBuilder->addParseParam('mark');
+```
+Настроить предзагрузку классов путем передачи пути к директории с классами:
+```php
+$docsBuilder->setPreloadDirClasses(__DIR__.'/../../../../contexts');
 ```
