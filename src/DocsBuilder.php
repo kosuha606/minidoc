@@ -41,19 +41,18 @@ class DocsBuilder
     private $viewTemplate;
 
     /**
-     * @var string
+     * @var array
      */
-    private $classesRegexp = '/app/';
+    private $classesRegexp = [];
 
-    private $preloadDirClasses = false;
+    private $preloadDirClasses = [];
 
     /**
      * DocsBuilder constructor.
      * @param $classesRegexp
      */
-    public function __construct($classesRegexp)
+    public function __construct()
     {
-        $this->classesRegexp = $classesRegexp;
         $this->viewTemplate = __DIR__.'/views/main.php';
         $this->addStyle(
             new ResourceDTO(
@@ -70,6 +69,20 @@ class DocsBuilder
         );
         $this->addStyle(new ResourceDTO(__DIR__.'/resources/style.css', ResourceDTO::TYPE_FILE));
         $this->addStyle(new ResourceDTO(__DIR__.'/resources/script.js', ResourceDTO::TYPE_FILE));
+    }
+
+    public function addClassRegexp($regexp)
+    {
+        $this->classesRegexp[] = $regexp;
+
+        return $this;
+    }
+
+    public function addPreloadClassesDir($dir)
+    {
+        $this->preloadDirClasses[] = $dir;
+
+        return $this;
     }
 
     /**
@@ -109,7 +122,9 @@ class DocsBuilder
     public function buildTemplate()
     {
         if ($this->getPreloadDirClasses()) {
-            $this->loadClassphp($this->getPreloadDirClasses());
+            foreach ($this->preloadDirClasses as $preloadDirClass) {
+                $this->loadClassphp($preloadDirClass);
+            }
         }
         $data['classesData'] = $this->afterBuildData($this->buildData());
         $data['stylesInline'] = $this->styleInline;
@@ -140,12 +155,11 @@ class DocsBuilder
      */
     private function buildData()
     {
-        $classesRegexp = $this->classesRegexp;
         $classes = get_declared_classes();
         $data = [];
 
         foreach ($classes as $class) {
-            if (preg_match($classesRegexp, $class)) {
+            if ($this->isMatchToRegexps($class)) {
                 $reader = new Reader($class);
                 $data[$class] = [
                     'class' => $class,
@@ -158,6 +172,16 @@ class DocsBuilder
         }
 
         return $data;
+    }
+
+    private function isMatchToRegexps($class)
+    {
+        foreach ($this->classesRegexp as $regexp) {
+            if (preg_match($regexp, $class)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

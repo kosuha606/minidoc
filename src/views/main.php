@@ -15,7 +15,7 @@ foreach ($classesData as $classesDatum) {
     }
 }
 
-$nocategory = $categories['Без_категории'];
+$nocategory = isset($categories['Без_категории']) ? $categories['Без_категории'] : [];
 unset($categories['Без_категории']);
 $nocategoryLabel = 'Без_категории';
 
@@ -77,7 +77,8 @@ $k = 1;
                     <div class="input-group-prepend">
                         <button class="btn btn-primary">Искать</button>
                     </div>
-                    <input type="text" class="form-control" placeholder="Введите класс" aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" placeholder="Введите класс" aria-label="Username"
+                           aria-describedby="basic-addon1">
                 </div>
             </form>
             <hr>
@@ -97,6 +98,11 @@ $k = 1;
                                     <?= $item['description'] ?>
                                 <?php } ?>
                             </div>
+                            <?php if (isset($item['version'])) { ?>
+                                <div>
+                                    <?= $item['version'] ?>
+                                </div>
+                            <?php } ?>
                             <hr>
                         <?php } ?>
                     </div>
@@ -110,11 +116,16 @@ $k = 1;
                                 <?= $item['class'] ?>
                             </a>
                         </div>
-                        <div>
-                            <?php if (isset($item['description'])) { ?>
+                        <?php if (isset($item['description'])) { ?>
+                            <div>
                                 <?= $item['description'] ?>
-                            <?php } ?>
-                        </div>
+                            </div>
+                        <?php } ?>
+                        <?php if (isset($item['version'])) { ?>
+                            <div>
+                                <?= $item['version'] ?>
+                            </div>
+                        <?php } ?>
                         <hr>
                     <?php } ?>
                 </div>
