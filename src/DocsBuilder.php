@@ -45,6 +45,8 @@ class DocsBuilder
      */
     private $classesRegexp = [];
 
+    private $filesRegexp = '/^[A-Za-z\d]+\.php$/';
+
     private $preloadDirClasses = [];
 
     /**
@@ -215,6 +217,25 @@ class DocsBuilder
     }
 
     /**
+     * @return string
+     */
+    public function getFilesRegexp(): string
+    {
+        return $this->filesRegexp;
+    }
+
+    /**
+     * @param string $filesRegexp
+     * @return DocsBuilder
+     */
+    public function setFilesRegexp(string $filesRegexp): DocsBuilder
+    {
+        $this->filesRegexp = $filesRegexp;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getParseParams(): array
@@ -284,7 +305,7 @@ class DocsBuilder
                     $this->loadClassphp($directory."/".$file);
                 } else {
                     // Классы с большой буквы
-                    if (preg_match("/^[A-Z]/", $file )) {
+                    if (preg_match($this->getFilesRegexp(), $file )) {
                         include_once($directory."/".$file);
                     }
                 }

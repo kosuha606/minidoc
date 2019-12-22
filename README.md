@@ -47,3 +47,11 @@ $docsBuilder->addParseParam('mark');
 ```php
 $docsBuilder->addPreloadClassesDir(__DIR__.'/../../../../contexts');
 ```
+Обработать данные после их построения
+```php
+$docBuilder->afterBuildData(function() {});
+```
+Установить регулярное выражение для выбора файлов из указанной директории
+```php
+$docBuilder->setFilesRegexp();
+```

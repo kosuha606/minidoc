@@ -7,6 +7,7 @@
 /** @var $scriptsInline */
 
 
+$categories = [];
 foreach ($classesData as $classesDatum) {
     if ($classesDatum['category']) {
         $categories[$classesDatum['category']][] = $classesDatum;
