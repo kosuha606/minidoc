@@ -96,12 +96,12 @@ $k = 1;
                             </div>
                             <div>
                                 <?php if (isset($item['description'])) { ?>
-                                    <?= $item['description'] ?>
+                                    <?= is_array($item['description']) ? join('<br>', $item['description']) : $item['description'] ?>
                                 <?php } ?>
                             </div>
                             <?php if (isset($item['version'])) { ?>
                                 <div>
-                                    <?= $item['version'] ?>
+                                    <b>Версия</b> <?= $item['version'] ?>
                                 </div>
                             <?php } ?>
                             <hr>
