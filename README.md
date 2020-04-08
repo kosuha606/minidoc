@@ -26,7 +26,7 @@ echo (new DocsBuilder())
 
 ### Пример работы
 
-![alt text](http://kosuha606.ru/uploads/example.png)
+![alt text](http://kosuha606.ru/uploads/common/5e8d90965a37d.png)
 
 ### Настройка
 Добавить стили или скритпы в шаблон:
