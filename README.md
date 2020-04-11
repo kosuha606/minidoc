@@ -55,3 +55,15 @@ $docBuilder->afterBuildData(function() {});
 ```php
 $docBuilder->setFilesRegexp();
 ```
+
+Выбрать язык вывода или указать свой языковой файл
+```php
+$docBuilder->setLanguage('ru');
+// Или указать свой массив переводов
+$docBuilder->setTranslations(require_once __DIR__.'/ch.php');
+```
+
+### Change log
+#### 1.0.9 (2020-04-11)
+- Добавлена интернационализация
+- Добавлено кэширование и возможность сброса кэша 
