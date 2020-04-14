@@ -120,6 +120,19 @@ use kosuha606\Minidoc\I18N; ?>
                                     <b><?= I18N::translate('Version') ?></b> <?= $item['version'] ?>
                                 </div>
                             <?php } ?>
+                            <?php if (isset($item['methods'])) { ?>
+                                <div>
+                                    <b>Методы</b>
+                                </div>
+                                <?php foreach ($item['methods'] as $methodName => $methodProps) { ?>
+                                    <b><?= $methodName ?></b>
+                                    <?php foreach ($methodProps as $methodPropName => $methodPropValue) { ?>
+                                        <div>
+                                            <?= $methodPropName ?>: <?= $methodPropValue ?>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                            <?php } ?>
                             <hr>
                         <?php } ?>
                     </div>

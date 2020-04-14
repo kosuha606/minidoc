@@ -144,11 +144,6 @@ class DocsBuilder
      */
     public function buildTemplate()
     {
-        if ($this->getPreloadDirClasses()) {
-            foreach ($this->preloadDirClasses as $preloadDirClass) {
-                $this->loadClassphp($preloadDirClass);
-            }
-        }
         $data['classesData'] = $this->afterBuildData($this->buildData());
         $data['stylesInline'] = $this->styleInline;
         $data['stylesUrl'] = $this->stylesUrl;
@@ -198,10 +193,16 @@ class DocsBuilder
      */
     private function buildData()
     {
-        $classes = get_declared_classes();
         $data = $this->getCache();
 
         if (!$data) {
+            if ($this->getPreloadDirClasses()) {
+                foreach ($this->preloadDirClasses as $preloadDirClass) {
+                    $this->loadClassphp($preloadDirClass);
+                }
+            }
+            $classes = get_declared_classes();
+
             foreach ($classes as $class) {
                 if ($this->isMatchToRegexps($class)) {
                     $reader = new Reader($class);
@@ -211,6 +212,16 @@ class DocsBuilder
                     foreach ($this->parseParams as $param) {
                         $tempParamVaule = $reader->getParameter($param);
                         $data[$class][$param] = $tempParamVaule;
+                    }
+                    $methods = get_class_methods($class);
+                    foreach ($methods as $method) {
+                        $reader = new Reader($class, $method);
+                        foreach ($this->parseParams as $param) {
+                            $tempParamVaule = $reader->getParameter($param);
+                            if ($tempParamVaule) {
+                                $data[$class]['methods'][$method][$param] = $tempParamVaule;
+                            }
+                        }
                     }
                 }
             }
@@ -452,6 +463,17 @@ class DocsBuilder
     public function setSearchQuery($searchQuery)
     {
         $this->searchQuery = $searchQuery;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $cacheFile
+     * @return DocsBuilder
+     */
+    public function setCacheFile(bool $cacheFile)
+    {
+        $this->cacheFile = $cacheFile;
 
         return $this;
     }
