@@ -90,8 +90,6 @@ class DocsBuilder
         );
         $this->addStyle(new ResourceDTO(__DIR__.'/resources/style.css', ResourceDTO::TYPE_FILE));
         $this->addStyle(new ResourceDTO(__DIR__.'/resources/script.js', ResourceDTO::TYPE_FILE));
-        $this->cacheResetProcess();
-        $this->searchQueryProcess();
     }
 
     public function addClassRegexp($regexp)
@@ -144,6 +142,8 @@ class DocsBuilder
      */
     public function buildTemplate()
     {
+        $this->cacheResetProcess();
+        $this->searchQueryProcess();
         $data['classesData'] = $this->afterBuildData($this->buildData());
         $data['stylesInline'] = $this->styleInline;
         $data['stylesUrl'] = $this->stylesUrl;
