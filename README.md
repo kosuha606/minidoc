@@ -26,7 +26,7 @@ echo (new DocsBuilder())
 
 ### Пример работы
 
-![alt text](http://kosuha606.ru/uploads/example.png)
+![alt text](http://kosuha606.ru/uploads/common/5e8d90965a37d.png)
 
 ### Настройка
 Добавить стили или скритпы в шаблон:
@@ -55,3 +55,15 @@ $docBuilder->afterBuildData(function() {});
 ```php
 $docBuilder->setFilesRegexp();
 ```
+
+Выбрать язык вывода или указать свой языковой файл
+```php
+$docBuilder->setLanguage('ru');
+// Или указать свой массив переводов
+$docBuilder->setTranslations(require_once __DIR__.'/ch.php');
+```
+
+### Change log
+#### 1.0.9 (2020-04-11)
+- Добавлена интернационализация
+- Добавлено кэширование и возможность сброса кэша 

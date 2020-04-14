@@ -13,6 +13,23 @@ use Exception;
  */
 class DocsBuilder
 {
+    private $searchQuery = false;
+
+    /**
+     * @var string
+     */
+    private $language = 'en';
+
+    /**
+     * @var array
+     */
+    private $translations = [];
+
+    /**
+     * @var bool
+     */
+    private $cacheFile = false;
+
     /**
      * @var array
      */
@@ -55,6 +72,8 @@ class DocsBuilder
      */
     public function __construct()
     {
+        I18N::setDocBuilderInstance($this);
+        $this->cacheFile = __DIR__.'/cache/classes.json';
         $this->viewTemplate = __DIR__.'/views/main.php';
         $this->addStyle(
             new ResourceDTO(
@@ -71,6 +90,8 @@ class DocsBuilder
         );
         $this->addStyle(new ResourceDTO(__DIR__.'/resources/style.css', ResourceDTO::TYPE_FILE));
         $this->addStyle(new ResourceDTO(__DIR__.'/resources/script.js', ResourceDTO::TYPE_FILE));
+        $this->cacheResetProcess();
+        $this->searchQueryProcess();
     }
 
     public function addClassRegexp($regexp)
@@ -152,30 +173,90 @@ class DocsBuilder
     }
 
     /**
+     *
+     */
+    protected function searchQueryProcess() {
+        if (isset($_GET['query'])) {
+            $this->setSearchQuery($_GET['query']);
+            // TODO implement search results
+        }
+    }
+
+    /**
+     * Process cache reset query from user
+     */
+    protected function cacheResetProcess()
+    {
+        if ($_POST && isset($_POST['resetcache'])) {
+            $this->resetCache();
+        }
+    }
+
+    /**
      * @return array
      * @throws Exception
      */
     private function buildData()
     {
         $classes = get_declared_classes();
-        $data = [];
+        $data = $this->getCache();
 
-        foreach ($classes as $class) {
-            if ($this->isMatchToRegexps($class)) {
-                $reader = new Reader($class);
-                $data[$class] = [
-                    'class' => $class,
-                ];
-                foreach ($this->parseParams as $param) {
-                    $tempParamVaule = $reader->getParameter($param);
-                    $data[$class][$param] = $tempParamVaule;
+        if (!$data) {
+            foreach ($classes as $class) {
+                if ($this->isMatchToRegexps($class)) {
+                    $reader = new Reader($class);
+                    $data[$class] = [
+                        'class' => $class,
+                    ];
+                    foreach ($this->parseParams as $param) {
+                        $tempParamVaule = $reader->getParameter($param);
+                        $data[$class][$param] = $tempParamVaule;
+                    }
                 }
             }
+            $this->saveCache($data);
         }
 
         return $data;
     }
 
+    /**
+     * @param array $data
+     */
+    private function saveCache($data = [])
+    {
+        $this->resetCache();
+        file_put_contents($this->cacheFile, json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
+     * @return array|mixed
+     */
+    private function getCache()
+    {
+        $result = [];
+
+        if (is_file($this->cacheFile)) {
+            $result = json_decode(file_get_contents($this->cacheFile), true);
+        }
+
+        return $result;
+    }
+
+    /**
+     *
+     */
+    private function resetCache()
+    {
+        if (is_file($this->cacheFile)) {
+            unlink($this->cacheFile);
+        }
+    }
+
+    /**
+     * @param $class
+     * @return bool
+     */
     private function isMatchToRegexps($class)
     {
         foreach ($this->classesRegexp as $regexp) {
@@ -183,6 +264,7 @@ class DocsBuilder
                 return true;
             }
         }
+
         return false;
     }
 
@@ -311,5 +393,66 @@ class DocsBuilder
                 }
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     * @return DocsBuilder
+     */
+    public function setLanguage(string $language)
+    {
+        $this->language = $language;
+
+        if (is_file(__DIR__."/i18n/{$this->language}.php")) {
+            $this->translations = require_once __DIR__."/i18n/{$this->language}.php";
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTranslations(): array
+    {
+        return $this->translations;
+    }
+
+    /**
+     * @param array $translations
+     * @return DocsBuilder
+     */
+    public function setTranslations(array $translations)
+    {
+        $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSearchQuery()
+    {
+        return $this->searchQuery;
+    }
+
+    /**
+     * @param bool $searchQuery
+     * @return DocsBuilder
+     */
+    public function setSearchQuery($searchQuery)
+    {
+        $this->searchQuery = $searchQuery;
+
+        return $this;
     }
 }
