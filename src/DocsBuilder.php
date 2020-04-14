@@ -471,7 +471,7 @@ class DocsBuilder
      * @param bool $cacheFile
      * @return DocsBuilder
      */
-    public function setCacheFile(bool $cacheFile)
+    public function setCacheFile($cacheFile)
     {
         $this->cacheFile = $cacheFile;
 
