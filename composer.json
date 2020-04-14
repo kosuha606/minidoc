@@ -8,10 +8,9 @@
       "email": "kosuha606@gamil.com"
     }
   ],
-  "minimum-stability": "dev",
   "require": {
     "php": ">=7.0.0",
-    "jan-swiecki/simple-annotations": "dev-master"
+    "jan-swiecki/simple-annotations": "0.3.1"
   },
   "autoload": {
     "psr-4": {
