@@ -65,6 +65,9 @@ $docBuilder->setTranslations(require_once __DIR__.'/ch.php');
 
 ### Change log
 #### 1.0.11 (2020-04-14)
+- Фикс метода setCacheFile
+
+#### 1.0.11 (2020-04-14)
 - Добавил парсинг анотаций методов
 
 #### 1.0.10 (2020-04-14)
